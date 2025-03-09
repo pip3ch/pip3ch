@@ -1,0 +1,9 @@
+{
+  "name": "pip3ch",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/pip3ch",
+  "projectType": "application",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project pip3ch --web",
+  "targets": {}
+}

@@ -1,0 +1,5 @@
+# nx automatically installed and config prettier
+# but we won't need it for this project
+# since we'll use eslint --fix instead
+# so we'll ignore all
+*
