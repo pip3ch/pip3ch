@@ -1,0 +1,9 @@
+{
+  "name": "pip3ch",
+  "service": "pip3ch",
+  "workspaceFolder": "/pip3ch",
+  "dockerComposeFile": [
+    "docker-compose.yml"
+  ],
+  "postCreateCommand": "sudo chown node node_modules"
+}

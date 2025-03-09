@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  pip3ch:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    user: node
+    volumes:
+      - ..:/pip3ch:cached  # Cached for better read performance
+      - pip3ch-node-modules:/pip3ch/node_modules  # Keeps dependencies inside Docker
+    command: "tail -f /dev/null"
+
+volumes:
+  pip3ch-node-modules:
