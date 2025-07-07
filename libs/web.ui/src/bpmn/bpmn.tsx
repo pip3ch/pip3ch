@@ -1,80 +1,80 @@
 "use client"
 
 import React, {
-    useRef,
-    useState,
-    useEffect,
-    useCallback,
-    FC,
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  FC,
 } from 'react';
 import BpmnJs from 'bpmn-js';
 export interface ReactBpmnProps {
-    url?: string;
-    diagramXML?: string;
-    onLoading?: () => void;
-    onError?: (err: Error) => void;
-    onShown?: (warnings: any[]) => void;
+  url?: string;
+  diagramXML?: string;
+  onLoading?: () => void;
+  onError?: (err: Error) => void;
+  onShown?: (warnings: any[]) => void;
 }
 
 const ReactBpmn: FC<ReactBpmnProps> = ({
-    url,
-    diagramXML: initialXML,
-    onLoading,
-    onError,
-    onShown,
+  url,
+  diagramXML: initialXML,
+  onLoading,
+  onError,
+  onShown,
 }) => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [diagramXML, setDiagramXML] = useState<string | undefined>(initialXML);
-    const bpmnViewerRef = useRef<BpmnJs | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [diagramXML, setDiagramXML] = useState<string | undefined>(initialXML);
+  const bpmnViewerRef = useRef<BpmnJs | null>(null);
 
-    // init / destroy bpmnViewer
-    useEffect(() => {
-        if (!containerRef.current) return;
+  // init / destroy bpmnViewer
+  useEffect(() => {
+    if (!containerRef.current) return;
 
-        const viewer = new BpmnJs({ container: containerRef.current });
-        bpmnViewerRef.current = viewer;
+    const viewer = new BpmnJs({ container: containerRef.current });
+    bpmnViewerRef.current = viewer;
 
-        viewer.on('import.done', ({ error, warnings }) => {
-            if (error) {
-                onError?.(error);
-            } else {
-                viewer.get('canvas').zoom('fit-viewport');
-                onShown?.(warnings);
-            }
-        });
+    viewer.on('import.done', ({ error, warnings }) => {
+      if (error) {
+        onError?.(error);
+      } else {
+        (viewer.get('canvas') as { zoom: (arg: string) => void }).zoom('fit-viewport');
+        onShown?.(warnings);
+      }
+    });
 
-        return () => {
-            viewer.destroy();
-            bpmnViewerRef.current = null;
-        };
-    }, [onError, onShown]);
+    return () => {
+      viewer.destroy();
+      bpmnViewerRef.current = null;
+    };
+  }, [onError, onShown]);
 
-    // fetch when url changes
-    useEffect(() => {
-        if (!url) return;
-        onLoading?.();
-        fetch(url)
-            .then((res) => res.text())
-            .then((xml) => setDiagramXML(xml))
-            .catch((err) => onError?.(err));
-    }, [url, onLoading, onError]);
+  // fetch when url changes
+  useEffect(() => {
+    if (!url) return;
+    onLoading?.();
+    fetch(url)
+      .then((res) => res.text())
+      .then((xml) => setDiagramXML(xml))
+      .catch((err) => onError?.(err));
+  }, [url, onLoading, onError]);
 
-    // import XML when prop or fetched XML updates
-    const importXML = useCallback((xml?: string) => {
-        if (xml && bpmnViewerRef.current) {
-            bpmnViewerRef.current.importXML(xml);
-        }
-    }, []);
+  // import XML when prop or fetched XML updates
+  const importXML = useCallback((xml?: string) => {
+    if (xml && bpmnViewerRef.current) {
+      bpmnViewerRef.current.importXML(xml);
+    }
+  }, []);
 
-    useEffect(() => {
-        importXML(initialXML ?? diagramXML);
-    }, [initialXML, diagramXML, importXML]);
+  useEffect(() => {
+    importXML(initialXML ?? diagramXML);
+  }, [initialXML, diagramXML, importXML]);
 
-    return <div ref={containerRef} className="react-bpmn-diagram-container" />;
+  return <div ref={containerRef} className="react-bpmn-diagram-container" />;
 };
 const Bpmn = () => {
-    return <div><ReactBpmn
-        diagramXML={`
+  return <div><ReactBpmn
+    diagramXML={`
         <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
   <collaboration id="sid-c0e745ff-361e-4afb-8c8d-2a1fc32b1424">
@@ -224,6 +224,6 @@ const Bpmn = () => {
   </bpmndi:BPMNDiagram>
 </definitions>
             `}
-    /></div>;
+  /></div>;
 }
 export { Bpmn }
