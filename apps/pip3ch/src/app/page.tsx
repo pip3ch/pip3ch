@@ -1,4 +1,5 @@
 import styles from './page.module.css';
+import { Bpmn } from '@/web.ui/bpmn'
 
 export default function Index() {
   /*
@@ -16,6 +17,7 @@ export default function Index() {
               Welcome pip3ch 👋
             </h1>
           </div>
+          <Bpmn />
 
           <div id="hero" className="rounded">
             <div className="text-container">
