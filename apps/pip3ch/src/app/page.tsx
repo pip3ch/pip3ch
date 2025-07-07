@@ -1,5 +1,7 @@
 import styles from './page.module.css';
 import { Bpmn } from '@/web.ui/bpmn'
+import { ExcalidrawComponent } from '@/web.ui/excalidraw';
+import '@excalidraw/excalidraw/index.css';
 
 export default function Index() {
   /*
@@ -18,6 +20,7 @@ export default function Index() {
             </h1>
           </div>
           <Bpmn />
+          <ExcalidrawComponent />
 
           <div id="hero" className="rounded">
             <div className="text-container">
